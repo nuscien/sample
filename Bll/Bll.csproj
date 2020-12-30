@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>NuScien.Sample.Bll</AssemblyName>
+    <RootNamespace>NuScien.Sample</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NuScien.OnPremises" Version="0.1.0" />
+  </ItemGroup>
+
+</Project>
