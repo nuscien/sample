@@ -65,8 +65,7 @@ namespace NuScien.Sample
         public static IEnumerable<CustomerEntity> Search(QueryArgs q)
         {
             var context = Internals.BusinessDbContext.Create(true);
-            if (q == null) return context.Customers.Take(Internals.Helper.PageSize);
-            return context.Customers.ListEntities(q.NameQuery, !q.NameExactly, q.State).Skip(q.Offset).Take(q.Count);
+            return context.Customers.ListEntities(q);
         }
 
         /// <summary>

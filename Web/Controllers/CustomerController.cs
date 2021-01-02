@@ -39,8 +39,8 @@ namespace NuScien.Sample.Web.Controllers
         public IActionResult Search()
         {
             var q = Request.Query.GetQueryArgs();
-            var col = CustomerEntity.Search(q).ToList();
-            return new JsonResult(new CollectionResult<CustomerEntity>(col, q?.Offset));
+            var col = CustomerEntity.Search(q);
+            return this.ResourceEntityResult(col, q?.Offset);
         }
     }
 }

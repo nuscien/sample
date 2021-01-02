@@ -25,37 +25,5 @@ namespace NuScien.Sample.Internals
         /// The common page size.
         /// </summary>
         public const int PageSize = 20;
-
-        internal static DbContextOptions<T> CreateDbContextOptions<T>(Func<DbContextOptionsBuilder, DbConnection, DbContextOptionsBuilder> configureConnection, DbConnection connection)
-     where T : DbContext
-        {
-            var b = new DbContextOptionsBuilder<T>();
-            configureConnection(b, connection);
-            return b.Options;
-        }
-
-        internal static DbContextOptions<T> CreateDbContextOptions<T>(Func<DbContextOptionsBuilder, string, DbContextOptionsBuilder> configureConnection, string connection)
-             where T : DbContext
-        {
-            var b = new DbContextOptionsBuilder<T>();
-            configureConnection(b, connection);
-            return b.Options;
-        }
-
-        internal static DbContextOptions<T> CreateDbContextOptions<T>(Func<DbContextOptionsBuilder<T>, DbConnection, Action<DbContextOptionsBuilder<T>>, DbContextOptionsBuilder<T>> configureConnection, DbConnection connection, Action<DbContextOptionsBuilder<T>> optionsAction)
-             where T : DbContext
-        {
-            var b = new DbContextOptionsBuilder<T>();
-            configureConnection(b, connection, optionsAction);
-            return b.Options;
-        }
-
-        internal static DbContextOptions<T> CreateDbContextOptions<T>(Func<DbContextOptionsBuilder<T>, string, Action<DbContextOptionsBuilder<T>>, DbContextOptionsBuilder<T>> configureConnection, string connection, Action<DbContextOptionsBuilder<T>> optionsAction)
-             where T : DbContext
-        {
-            var b = new DbContextOptionsBuilder<T>();
-            configureConnection(b, connection, optionsAction);
-            return b.Options;
-        }
     }
 }

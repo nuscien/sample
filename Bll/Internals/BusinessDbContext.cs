@@ -58,7 +58,7 @@ namespace NuScien.Sample.Internals
         /// <param name="configureConnection">The method to configure context options with connection string.</param>
         /// <param name="connection">The database connection.</param>
         public BusinessDbContext(Func<DbContextOptionsBuilder, DbConnection, DbContextOptionsBuilder> configureConnection, DbConnection connection)
-            : base(Helper.CreateDbContextOptions<BusinessDbContext>(configureConnection, connection))
+            : base(DbResourceEntityExtensions.CreateDbContextOptions<BusinessDbContext>(configureConnection, connection))
         {
         }
 
@@ -70,7 +70,7 @@ namespace NuScien.Sample.Internals
         /// <param name="configureConnection">The method to configure context options with connection string.</param>
         /// <param name="connection">The connection string.</param>
         public BusinessDbContext(Func<DbContextOptionsBuilder, string, DbContextOptionsBuilder> configureConnection, string connection)
-            : base(Helper.CreateDbContextOptions<BusinessDbContext>(configureConnection, connection))
+            : base(DbResourceEntityExtensions.CreateDbContextOptions<BusinessDbContext>(configureConnection, connection))
         {
         }
 
@@ -83,7 +83,7 @@ namespace NuScien.Sample.Internals
         /// <param name="connection">The database connection.</param>
         /// <param name="optionsAction">The additional options action.</param>
         public BusinessDbContext(Func<DbContextOptionsBuilder<BusinessDbContext>, DbConnection, Action<DbContextOptionsBuilder<BusinessDbContext>>, DbContextOptionsBuilder<BusinessDbContext>> configureConnection, DbConnection connection, Action<DbContextOptionsBuilder<BusinessDbContext>> optionsAction)
-            : base(Helper.CreateDbContextOptions(configureConnection, connection, optionsAction))
+            : base(DbResourceEntityExtensions.CreateDbContextOptions(configureConnection, connection, optionsAction))
         {
         }
 
@@ -96,7 +96,7 @@ namespace NuScien.Sample.Internals
         /// <param name="connection">The connection string.</param>
         /// <param name="optionsAction">The additional options action.</param>
         public BusinessDbContext(Func<DbContextOptionsBuilder<BusinessDbContext>, string, Action<DbContextOptionsBuilder<BusinessDbContext>>, DbContextOptionsBuilder<BusinessDbContext>> configureConnection, string connection, Action<DbContextOptionsBuilder<BusinessDbContext>> optionsAction)
-            : base(Helper.CreateDbContextOptions(configureConnection, connection, optionsAction))
+            : base(DbResourceEntityExtensions.CreateDbContextOptions(configureConnection, connection, optionsAction))
         {
         }
 
