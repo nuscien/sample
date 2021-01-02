@@ -96,11 +96,12 @@ namespace NuScien.Sample
         /// Gets by identifier.
         /// </summary>
         /// <param name="id">The identifier of the entity to get.</param>
+        /// <param name="cancellationToken">The optional token to monitor for cancellation requests.</param>
         /// <returns>The entity.</returns>
-        public static Task<CustomerEntity> GetById(string id, bool includeAllStates = false)
+        public static Task<CustomerEntity> GetAsync(string id, bool includeAllStates = false, CancellationToken cancellationToken = default)
         {
             var context = Internals.BusinessDbContext.Create(true);
-            return context.Customers.GetByIdAsync(id, includeAllStates);
+            return context.Customers.GetByIdAsync(id, includeAllStates, cancellationToken);
         }
 
         /// <summary>

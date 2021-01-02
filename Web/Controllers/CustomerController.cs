@@ -27,7 +27,7 @@ namespace NuScien.Sample.Web.Controllers
         [Route("customer/{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            return this.ResourceEntityResult(await CustomerEntity.GetById(id));
+            return this.ResourceEntityResult(await CustomerEntity.GetAsync(id));
         }
 
         /// <summary>
