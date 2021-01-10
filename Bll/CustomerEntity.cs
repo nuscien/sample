@@ -16,6 +16,8 @@ using Trivial.Text;
 using Trivial.Net;
 using NuScien.Data;
 using NuScien.Security;
+using Trivial.Security;
+using Microsoft.EntityFrameworkCore;
 
 namespace NuScien.Sample
 {
@@ -68,68 +70,104 @@ namespace NuScien.Sample
 
         #region Static methods
 
-        /// <summary>
-        /// Searches.
-        /// </summary>
-        /// <param name="name">The name to search.</param>
-        /// <param name="like">true if search by like; otherwise, false, to equals to.</param>
-        /// <param name="state">The state.</param>
-        /// <returns>A collection.</returns>
-        public static IEnumerable<CustomerEntity> Search(string name, bool like = false, ResourceEntityStates state = ResourceEntityStates.Normal)
-        {
-            var context = Internals.BusinessDbContext.Create(true);
-            return context.Customers.ListEntities(name, like, state);
-        }
-
-        /// <summary>
-        /// Searches.
-        /// </summary>
-        /// <param name="name">The name to search.</param>
-        /// <returns>A collection.</returns>
-        public static IEnumerable<CustomerEntity> Search(QueryArgs q)
-        {
-            var context = Internals.BusinessDbContext.Create(true);
-            return context.Customers.ListEntities(q);
-        }
-
-        /// <summary>
-        /// Gets by identifier.
-        /// </summary>
-        /// <param name="id">The identifier of the entity to get.</param>
-        /// <param name="cancellationToken">The optional token to monitor for cancellation requests.</param>
-        /// <returns>The entity.</returns>
-        public static Task<CustomerEntity> GetAsync(string id, bool includeAllStates = false, CancellationToken cancellationToken = default)
-        {
-            var context = Internals.BusinessDbContext.Create(true);
-            return context.Customers.GetByIdAsync(id, includeAllStates, cancellationToken);
-        }
-
-        /// <summary>
-        /// Saves.
-        /// </summary>
-        /// <param name="value">The entity to add or update.</param>
-        /// <param name="cancellationToken">The optional token to monitor for cancellation requests.</param>
-        /// <returns>The change method.</returns>
-        /// <example>
-        /// var client = ResourceAccessClients.CreateAsync();
-        /// // client.LoginAsync(...);
-        /// var entity = CustomerEntity.GetById("abcdefg") ?? new CustomerEntity
-        /// {
-        ///     Name = "abcdefg",
-        ///     State = ResourceEntityStates.Normal
-        /// };
-        /// await CustomerEntity.SaveAsync(client, entity);
-        /// </example>
-        public static async Task<ChangeMethods> SaveAsync(BaseResourceAccessClient client, CustomerEntity value, CancellationToken cancellationToken = default)
-        {
-            if (value.IsNew
-                ? string.IsNullOrWhiteSpace(value.SiteId)   // Property check for new entity.
-                : !await client.HasPermissionAsync(value.SiteId, "sample-customer-management")) // Permission check.
-                return ChangeMethods.Invalid;
-            var context = Internals.BusinessDbContext.Create(false);
-            return await DbResourceEntityExtensions.SaveAsync(context.Customers, context.SaveChangesAsync, value, cancellationToken);
-        }
-
         #endregion
+    }
+
+    /// <summary>
+    /// The data provider for customers.
+    /// </summary>
+    public class CustomerEntityProvider : OnPremisesResourceEntityHandler<CustomerEntity>
+    {
+        /// <summary>
+        /// Initializes a new instance of the HttpResourceEntityHandler class.
+        /// </summary>
+        /// <param name="client">The resource access client.</param>
+        /// <param name="set">The database set.</param>
+        /// <param name="save">The entity save handler.</param>
+        public CustomerEntityProvider(OnPremisesResourceAccessClient client, DbSet<CustomerEntity> set, Func<CancellationToken, Task<int>> save)
+            : base(client, set, save)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the OnPremisesResourceEntityHandler class.
+        /// </summary>
+        /// <param name="dataProvider">The resource data provider.</param>
+        /// <param name="set">The database set.</param>
+        /// <param name="save">The entity save handler.</param>
+        public CustomerEntityProvider(IAccountDataProvider dataProvider, DbSet<CustomerEntity> set, Func<CancellationToken, Task<int>> save)
+            : base(dataProvider, set, save)
+        {
+        }
+
+        /// <summary>
+        /// Searches.
+        /// </summary>
+        /// <param name="q">The query arguments.</param>
+        /// <param name="siteId"></param>
+        /// <param name="cancellationToken">The optional token to monitor for cancellation requests.</param>
+        /// <returns>A collection of entity.</returns>
+        public Task<CollectionResult<CustomerEntity>> SearchAsync(QueryArgs q, string siteId, CancellationToken cancellationToken)
+        {
+            var query = q != null ? (QueryData)q : new QueryData();
+            if (string.IsNullOrWhiteSpace(siteId)) query["site"] = siteId;
+            return SearchAsync(query, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        protected override IQueryable<CustomerEntity> Filter(IQueryable<CustomerEntity> source, QueryData q)
+        {
+            var s = q["site"];
+            if (!string.IsNullOrWhiteSpace(s)) source = source.Where(ele => ele.SiteId == s);
+            s = q["addr"];
+            if (!string.IsNullOrWhiteSpace(s)) source = source.Where(ele => ele.Address != null && ele.Address.Contains(s));
+            return source;
+        }
+    }
+
+    /// <summary>
+    /// The HTTP client for customers.
+    /// </summary>
+    public class CustomerEntityClient : HttpResourceEntityHandler<CustomerEntity>
+    {
+        /// <summary>
+        /// The relative path of the resource.
+        /// </summary>
+        public const string RELATIVE_PATH = "customers";
+
+        /// <summary>
+        /// Initializes a new instance of the CustomerEntityClient class.
+        /// </summary>
+        /// <param name="client">The resource access client.</param>
+        /// <param name="relativePath">The relative path.</param>
+        public CustomerEntityClient(HttpResourceAccessClient client)
+            : base(client, RELATIVE_PATH)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the HttpResourceEntityHandler class.
+        /// </summary>
+        /// <param name="appKey">The app secret key for accessing API.</param>
+        /// <param name="host">The host URI.</param>
+        /// <param name="relativePath">The relative path.</param>
+        public CustomerEntityClient(AppAccessingKey appKey, Uri host)
+            : base(appKey, host, RELATIVE_PATH)
+        {
+        }
+
+        /// <summary>
+        /// Searches.
+        /// </summary>
+        /// <param name="q">The query arguments.</param>
+        /// <param name="siteId"></param>
+        /// <param name="cancellationToken">The optional token to monitor for cancellation requests.</param>
+        /// <returns>A collection of entity.</returns>
+        public Task<CollectionResult<CustomerEntity>> SearchAsync(QueryArgs q, string siteId, CancellationToken cancellationToken)
+        {
+            var query = q != null ? (QueryData)q : new QueryData();
+            if (string.IsNullOrWhiteSpace(siteId)) query["site"] = siteId;
+            return SearchAsync(query, cancellationToken);
+        }
     }
 }

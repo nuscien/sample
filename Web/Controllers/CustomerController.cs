@@ -16,7 +16,7 @@ namespace NuScien.Sample.Web.Controllers
     /// The customer controller.
     /// </summary>
     [ApiController]
-    [Route("api")]
+    [Route("api/customers")]
     public class CustomerController : Controller
     {
         /// <summary>
@@ -24,10 +24,12 @@ namespace NuScien.Sample.Web.Controllers
         /// </summary>
         /// <returns>The customers.</returns>
         [HttpGet]
-        [Route("customer/{id}")]
+        [Route("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            return this.ResourceEntityResult(await CustomerEntity.GetAsync(id));
+            var context = await this.GetBusinessContextAsync(true);
+            var entity = await context.Customers.GetAsync(id);
+            return this.ResourceEntityResult(entity);
         }
 
         /// <summary>
@@ -35,12 +37,24 @@ namespace NuScien.Sample.Web.Controllers
         /// </summary>
         /// <returns>The customers.</returns>
         [HttpGet]
-        [Route("customers")]
-        public IActionResult Search()
+        public async Task<IActionResult> Search()
         {
+            var context = await this.GetBusinessContextAsync(true);
             var q = Request.Query.GetQueryArgs();
-            var col = CustomerEntity.Search(q);
-            return this.ResourceEntityResult(col, q?.Offset);
+            var col = await context.Customers.SearchAsync(q);
+            return this.ResourceEntityResult(col.Value, col.Offset, col.Count);
+        }
+
+        /// <summary>
+        /// Searches customers.
+        /// </summary>
+        /// <returns>The customers.</returns>
+        [HttpPut]
+        public async Task<ChangeMethodResult> Save([FromBody] CustomerEntity entity)
+        {
+            var context = await this.GetBusinessContextAsync(false);
+            var result = await context.Customers.SaveAsync(entity);
+            return result;
         }
     }
 }
