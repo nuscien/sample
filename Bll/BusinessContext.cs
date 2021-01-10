@@ -198,6 +198,16 @@ namespace NuScien.Sample
             Customers = new CustomerEntityClient(client);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the HttpBusinessContext class.
+        /// </summary>
+        /// <param name="appKey">The app secret key for accessing API.</param>
+        /// <param name="host">The host URI.</param>
+        public HttpBusinessContext(AppAccessingKey appKey, Uri host)
+            : this(new HttpResourceAccessClient(appKey, host))
+        {
+        }
+
         #endregion
 
         #region Data providers
