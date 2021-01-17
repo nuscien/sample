@@ -21,10 +21,10 @@ using Trivial.Security;
 namespace NuScien.Sample
 {
     /// <summary>
-    /// The customer.
+    /// The good entity.
     /// </summary>
-    [Table("customers")]
-    public class CustomerEntity : SiteOwnedResourceEntity
+    [Table("testgoods")]
+    public class GoodEntity : SiteOwnedResourceEntity
     {
         #region Constructors
 
@@ -33,22 +33,11 @@ namespace NuScien.Sample
         #region Properties
 
         /// <summary>
-        /// Gets or sets the address.
+        /// Gets or sets the image.
         /// </summary>
-        [JsonPropertyName("address")]
-        [Column("address")]
-        public string Address
-        {
-            get => GetCurrentProperty<string>();
-            set => SetCurrentProperty(value);
-        }
-
-        /// <summary>
-        /// Gets or sets the phone number.
-        /// </summary>
-        [JsonPropertyName("phone")]
-        [Column("phone")]
-        public string PhoneNumber
+        [JsonPropertyName("image")]
+        [Column("image")]
+        public string Image
         {
             get => GetCurrentProperty<string>();
             set => SetCurrentProperty(value);

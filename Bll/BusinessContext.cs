@@ -99,6 +99,11 @@ namespace NuScien.Sample
         /// </summary>
         public CustomerEntityProvider Customers { get; }
 
+        /// <summary>
+        /// Gets the good data provider.
+        /// </summary>
+        public GoodEntityProvider Goods { get; }
+
         #endregion
 
         #region Other members
@@ -157,6 +162,11 @@ namespace NuScien.Sample
         /// Gets the customer data client.
         /// </summary>
         public CustomerEntityClient Customers { get; }
+
+        /// <summary>
+        /// Gets the good data client.
+        /// </summary>
+        public CustomerEntityClient Goods { get; }
 
         #endregion
 
