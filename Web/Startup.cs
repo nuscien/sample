@@ -32,9 +32,7 @@ namespace NuScien.Sample.Web
                 var readonlyContext = context;
                 return Task.FromResult<IAccountDataProvider>(new AccountDbSetProvider(context));
             });
-            OnPremisesBusinessContext.Factory = (client, isReadonly) => isReadonly
-                ? new OnPremisesBusinessContext(client, UseSqlServer, "Server=.;Database=NuScien5;Integrated Security=True;")
-                : new OnPremisesBusinessContext(client, UseSqlServer, "Server=.;Database=NuScien5;Integrated Security=True;");
+            OnPremisesBusinessContext.Factory = client => new OnPremisesBusinessContext(client, UseSqlServer, "Server=.;Database=NuScien5;Integrated Security=True;");
         }
 
         /// <summary>

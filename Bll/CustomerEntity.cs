@@ -10,18 +10,23 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+using NuScien.Collection;
+using NuScien.Data;
+using NuScien.Security;
 using Trivial.Data;
 using Trivial.Reflection;
 using Trivial.Text;
 using Trivial.Net;
-using NuScien.Data;
-using NuScien.Security;
 using Trivial.Security;
-using Microsoft.EntityFrameworkCore;
 
 namespace NuScien.Sample
 {
-    public class CustomerEntity : BaseResourceEntity
+    /// <summary>
+    /// The customer.
+    /// </summary>
+    [Table("customers")]
+    public class CustomerEntity : SiteOwnedResourceEntity
     {
         #region Constructors
 
@@ -51,17 +56,6 @@ namespace NuScien.Sample
             set => SetCurrentProperty(value);
         }
 
-        /// <summary>
-        /// Gets or sets the identifier of the owner site.
-        /// </summary>
-        [JsonPropertyName("site")]
-        [Column("site")]
-        public string SiteId
-        {
-            get => GetCurrentProperty<string>();
-            set => SetCurrentProperty(value);
-        }
-
         #endregion
 
         #region Member methods
@@ -76,10 +70,10 @@ namespace NuScien.Sample
     /// <summary>
     /// The data provider for customers.
     /// </summary>
-    public class CustomerEntityProvider : OnPremisesResourceEntityHandler<CustomerEntity>
+    public class CustomerEntityProvider : OnPremisesResourceEntityProvider<CustomerEntity>
     {
         /// <summary>
-        /// Initializes a new instance of the HttpResourceEntityHandler class.
+        /// Initializes a new instance of the CustomerEntityProvider class.
         /// </summary>
         /// <param name="client">The resource access client.</param>
         /// <param name="set">The database set.</param>
@@ -90,7 +84,7 @@ namespace NuScien.Sample
         }
 
         /// <summary>
-        /// Initializes a new instance of the OnPremisesResourceEntityHandler class.
+        /// Initializes a new instance of the CustomerEntityProvider class.
         /// </summary>
         /// <param name="dataProvider">The resource data provider.</param>
         /// <param name="set">The database set.</param>
@@ -115,20 +109,18 @@ namespace NuScien.Sample
         }
 
         /// <inheritdoc />
-        protected override IQueryable<CustomerEntity> Filter(IQueryable<CustomerEntity> source, QueryData q)
+        protected override void MapQuery(QueryPredication<CustomerEntity> predication)
         {
-            var s = q["site"];
-            if (!string.IsNullOrWhiteSpace(s)) source = source.Where(ele => ele.SiteId == s);
-            s = q["addr"];
-            if (!string.IsNullOrWhiteSpace(s)) source = source.Where(ele => ele.Address != null && ele.Address.Contains(s));
-            return source;
+            predication.AddForString("site", info => info.Source.Where(ele => ele.SiteId == info.Value));
+            predication.AddForString("phone", info => info.Source.Where(ele => ele.PhoneNumber == info.Value));
+            predication.AddForString("addr", info => info.Source.Where(ele => ele.Address != null && ele.Address.Contains(info.Value)));
         }
     }
 
     /// <summary>
     /// The HTTP client for customers.
     /// </summary>
-    public class CustomerEntityClient : HttpResourceEntityHandler<CustomerEntity>
+    public class CustomerEntityClient : HttpResourceEntityProvider<CustomerEntity>
     {
         /// <summary>
         /// The relative path of the resource.
@@ -146,7 +138,7 @@ namespace NuScien.Sample
         }
 
         /// <summary>
-        /// Initializes a new instance of the HttpResourceEntityHandler class.
+        /// Initializes a new instance of the CustomerEntityClient class.
         /// </summary>
         /// <param name="appKey">The app secret key for accessing API.</param>
         /// <param name="host">The host URI.</param>

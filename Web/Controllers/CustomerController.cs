@@ -17,44 +17,13 @@ namespace NuScien.Sample.Web.Controllers
     /// </summary>
     [ApiController]
     [Route("api/customers")]
-    public class CustomerController : Controller
+    public class CustomerController : BaseResourceEntityController<CustomerEntityProvider, CustomerEntity>
     {
-        /// <summary>
-        /// Searches customers.
-        /// </summary>
-        /// <returns>The customers.</returns>
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> Get(string id)
+        /// <inheritdoc />
+        protected override async Task<CustomerEntityProvider> GetProviderAsync()
         {
-            var context = await this.GetBusinessContextAsync(true);
-            var entity = await context.Customers.GetAsync(id);
-            return this.ResourceEntityResult(entity);
-        }
-
-        /// <summary>
-        /// Searches customers.
-        /// </summary>
-        /// <returns>The customers.</returns>
-        [HttpGet]
-        public async Task<IActionResult> Search()
-        {
-            var context = await this.GetBusinessContextAsync(true);
-            var q = Request.Query.GetQueryArgs();
-            var col = await context.Customers.SearchAsync(q);
-            return this.ResourceEntityResult(col.Value, col.Offset, col.Count);
-        }
-
-        /// <summary>
-        /// Searches customers.
-        /// </summary>
-        /// <returns>The customers.</returns>
-        [HttpPut]
-        public async Task<ChangeMethodResult> Save([FromBody] CustomerEntity entity)
-        {
-            var context = await this.GetBusinessContextAsync(false);
-            var result = await context.Customers.SaveAsync(entity);
-            return result;
+            var context = await this.GetBusinessContextAsync();
+            return context.Customers;
         }
     }
 }

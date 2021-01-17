@@ -17,10 +17,10 @@ namespace NuScien.Sample.Web.Controllers
 {
     internal static class ControllerHelper
     {
-        public static async Task<OnPremisesBusinessContext> GetBusinessContextAsync(this ControllerBase controller, bool isReadonly = false)
+        public static async Task<OnPremisesBusinessContext> GetBusinessContextAsync(this ControllerBase controller)
         {
             var client = await controller.GetResourceAccessClientAsync() as OnPremisesResourceAccessClient;
-            return OnPremisesBusinessContext.Create(client, isReadonly);
+            return OnPremisesBusinessContext.Create(client);
         }
     }
 }
