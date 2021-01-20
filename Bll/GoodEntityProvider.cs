@@ -58,6 +58,8 @@ namespace NuScien.Sample
         /// <returns>A collection of entity.</returns>
         public Task<CollectionResult<GoodEntity>> SearchAsync(QueryArgs q, string siteId, CancellationToken cancellationToken)
         {
+            // This is an additional method to extend search method.
+
             var query = q != null ? (QueryData)q : new QueryData();
             if (string.IsNullOrWhiteSpace(siteId)) query["site"] = siteId;
             return SearchAsync(query, cancellationToken);
@@ -76,12 +78,15 @@ namespace NuScien.Sample
         /// <inheritdoc />
         protected override void MapQuery(QueryPredication<GoodEntity> predication)
         {
+            // This method is used to map the properties from query data to entity.
+            // You can bind the query key and expression to filter the data source.
+
             predication.AddForString("site", info => info.Source.Where(ele => ele.SiteId == info.Value));
         }
     }
 
     /// <summary>
-    /// The HTTP client for customers.
+    /// The HTTP client for goods.
     /// </summary>
     public class GoodEntityClient : HttpResourceEntityProvider<GoodEntity>
     {
