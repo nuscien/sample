@@ -34,7 +34,7 @@ namespace NuScien.Sample
         /// <param name="set">The database set.</param>
         /// <param name="save">The entity save handler.</param>
         public CustomerEntityProvider(OnPremisesResourceAccessClient client, DbSet<CustomerEntity> set, Func<CancellationToken, Task<int>> save)
-            : base(client, set, save)
+            : base(client, set, save) // Please make sure the entity provider contains a constructor with these parameters.
         {
         }
 
@@ -45,7 +45,7 @@ namespace NuScien.Sample
         /// <param name="set">The database set.</param>
         /// <param name="save">The entity save handler.</param>
         public CustomerEntityProvider(IAccountDataProvider dataProvider, DbSet<CustomerEntity> set, Func<CancellationToken, Task<int>> save)
-            : base(dataProvider, set, save)
+            : base(dataProvider, set, save) // Please make sure the entity provider contains a constructor with these parameters.
         {
         }
 
@@ -58,6 +58,8 @@ namespace NuScien.Sample
         /// <returns>A collection of entity.</returns>
         public Task<CollectionResult<CustomerEntity>> SearchAsync(QueryArgs q, string siteId, CancellationToken cancellationToken)
         {
+            // This is an additional method to extend search method.
+
             var query = q != null ? (QueryData)q : new QueryData();
             if (string.IsNullOrWhiteSpace(siteId)) query["site"] = siteId;
             return SearchAsync(query, cancellationToken);
@@ -66,6 +68,9 @@ namespace NuScien.Sample
         /// <inheritdoc />
         protected override void MapQuery(QueryPredication<CustomerEntity> predication)
         {
+            // This method is used to map the properties from query data to entity.
+            // You can bind the query key and expression to filter the data source.
+
             predication.AddForString("site", info => info.Source.Where(ele => ele.SiteId == info.Value));
             predication.AddForString("phone", info => info.Source.Where(ele => ele.PhoneNumber == info.Value));
             predication.AddForString("addr", info => info.Source.Where(ele => ele.Address != null && ele.Address.Contains(info.Value)));
@@ -88,7 +93,7 @@ namespace NuScien.Sample
         /// <param name="client">The resource access client.</param>
         /// <param name="relativePath">The relative path.</param>
         public CustomerEntityClient(HttpResourceAccessClient client)
-            : base(client, RELATIVE_PATH)
+            : base(client, RELATIVE_PATH)   // Please make sure the entity provider contains a constructor with these parameters.
         {
         }
 

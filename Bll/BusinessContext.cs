@@ -97,12 +97,12 @@ namespace NuScien.Sample
         /// <summary>
         /// Gets the customer data provider.
         /// </summary>
-        public CustomerEntityProvider Customers { get; }
+        public CustomerEntityProvider Customers { get; set; }   // Its value will be initialized automatically.
 
         /// <summary>
         /// Gets the good data provider.
         /// </summary>
-        public GoodEntityProvider Goods { get; }
+        public GoodEntityProvider Goods { get; set; }   // Its value will be initialized automatically.
 
         #endregion
 
@@ -161,12 +161,12 @@ namespace NuScien.Sample
         /// <summary>
         /// Gets the customer data client.
         /// </summary>
-        public CustomerEntityClient Customers { get; }
+        public CustomerEntityClient Customers { get; set; } // Its value will be initialized automatically.
 
         /// <summary>
         /// Gets the good data client.
         /// </summary>
-        public CustomerEntityClient Goods { get; }
+        public CustomerEntityClient Goods { get; set; } // Its value will be initialized automatically.
 
         #endregion
 

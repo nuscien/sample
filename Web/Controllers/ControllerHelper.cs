@@ -15,8 +15,16 @@ using Trivial.Text;
 
 namespace NuScien.Sample.Web.Controllers
 {
+    /// <summary>
+    /// Helpers for web API.
+    /// </summary>
     internal static class ControllerHelper
     {
+        /// <summary>
+        /// Gets the business resource account context.
+        /// </summary>
+        /// <param name="controller">The MVC controller.</param>
+        /// <returns>The business resource account context.</returns>
         public static async Task<OnPremisesBusinessContext> GetBusinessContextAsync(this ControllerBase controller)
         {
             var client = await controller.GetResourceAccessClientAsync() as OnPremisesResourceAccessClient;

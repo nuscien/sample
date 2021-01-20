@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NuScien.Data;
 using NuScien.Web;
 using Trivial.Data;
@@ -19,6 +20,20 @@ namespace NuScien.Sample.Web.Controllers
     [Route("api/goods")]
     public class GoodController : BaseResourceEntityController<GoodEntityProvider, GoodEntity>
     {
+        /// <summary>
+        /// Initializes a new instance of the GoodController class.
+        /// </summary>
+        public GoodController()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the GoodController class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        public GoodController(ILogger<GoodController> logger) : base(logger)
+        {
+        }
         /// <inheritdoc />
         protected override async Task<GoodEntityProvider> GetProviderAsync()
         {

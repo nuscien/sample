@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using NuScien.Data;
 using NuScien.Web;
 using Trivial.Data;
@@ -19,6 +20,21 @@ namespace NuScien.Sample.Web.Controllers
     [Route("api/customers")]
     public class CustomerController : BaseResourceEntityController<CustomerEntityProvider, CustomerEntity>
     {
+        /// <summary>
+        /// Initializes a new instance of the CustomerController class.
+        /// </summary>
+        public CustomerController()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the CustomerController class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        public CustomerController(ILogger<CustomerController> logger) : base(logger)
+        {
+        }
+
         /// <inheritdoc />
         protected override async Task<CustomerEntityProvider> GetProviderAsync()
         {

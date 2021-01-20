@@ -34,7 +34,7 @@ namespace NuScien.Sample
         /// <param name="set">The database set.</param>
         /// <param name="save">The entity save handler.</param>
         public GoodEntityProvider(OnPremisesResourceAccessClient client, DbSet<GoodEntity> set, Func<CancellationToken, Task<int>> save)
-            : base(client, set, save)
+            : base(client, set, save) // Please make sure the entity provider contains a constructor with these parameters.
         {
         }
 
@@ -45,7 +45,7 @@ namespace NuScien.Sample
         /// <param name="set">The database set.</param>
         /// <param name="save">The entity save handler.</param>
         public GoodEntityProvider(IAccountDataProvider dataProvider, DbSet<GoodEntity> set, Func<CancellationToken, Task<int>> save)
-            : base(dataProvider, set, save)
+            : base(dataProvider, set, save) // Please make sure the entity provider contains a constructor with these parameters.
         {
         }
 
@@ -61,6 +61,16 @@ namespace NuScien.Sample
             var query = q != null ? (QueryData)q : new QueryData();
             if (string.IsNullOrWhiteSpace(siteId)) query["site"] = siteId;
             return SearchAsync(query, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public override async Task<ChangeMethodResult> SaveAsync(GoodEntity value, CancellationToken cancellationToken = default)
+        {
+            // This method is a demo about to override default entity save method.
+            // It requires a user logged in to save an entity.
+
+            if (!CoreResources.IsUserSignedIn) return new ChangeMethodResult(ChangeMethods.Invalid);
+            return await base.SaveAsync(value, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -86,7 +96,7 @@ namespace NuScien.Sample
         /// <param name="client">The resource access client.</param>
         /// <param name="relativePath">The relative path.</param>
         public GoodEntityClient(HttpResourceAccessClient client)
-            : base(client, RELATIVE_PATH)
+            : base(client, RELATIVE_PATH)   // Please make sure the entity provider contains a constructor with these parameters.
         {
         }
 
