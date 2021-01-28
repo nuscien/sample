@@ -59,6 +59,10 @@ namespace NuScien.Sample
         public Task<CollectionResult<CustomerEntity>> SearchAsync(QueryArgs q, string siteId, CancellationToken cancellationToken)
         {
             // This is an additional method to extend search method.
+            // You can add the new method to get the list with further conditions
+            // by call SearchAsync(QueryData, CancellationToken)
+            // filling a key-value pair query data which will be translated to the expression
+            // in MapQuery(QueryPredication<TEntity>) member method.
 
             var query = q != null ? (QueryData)q : new QueryData();
             if (string.IsNullOrWhiteSpace(siteId)) query["site"] = siteId;
@@ -70,8 +74,10 @@ namespace NuScien.Sample
         {
             // This method is used to map the properties from query data to entity.
             // You can bind the query key and expression to filter the data source.
+            // The query key is from the query data
+            // and the expression is just to filter the source collection.
 
-            predication.AddForString("site", info => info.Source.Where(ele => ele.SiteId == info.Value));
+            predication.AddForString("site", info => info.Source.Where(ele => ele.OwnerSiteId == info.Value));
             predication.AddForString("phone", info => info.Source.Where(ele => ele.PhoneNumber == info.Value));
             predication.AddForString("addr", info => info.Source.Where(ele => ele.Address != null && ele.Address.Contains(info.Value)));
         }

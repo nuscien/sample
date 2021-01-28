@@ -26,12 +26,9 @@ namespace NuScien.Sample.Web
             Configuration = configuration;
 
             // Setup database and resource access client.
-            ResourceAccessClients.Setup(() =>
-            {
-                var context = new AccountDbContext(UseSqlServer, "Server=.;Database=NuScien5;Integrated Security=True;");
-                var readonlyContext = context;
-                return Task.FromResult<IAccountDataProvider>(new AccountDbSetProvider(context));
-            });
+            ResourceAccessClients.Setup(() => new AccountDbSetProvider(
+                isReadonly => new AccountDbContext(UseSqlServer, "Server=.;Database=NuScien5;Integrated Security=True;")
+            ));
             OnPremisesBusinessContext.Factory = client => new OnPremisesBusinessContext(client, UseSqlServer, "Server=.;Database=NuScien5;Integrated Security=True;");
         }
 

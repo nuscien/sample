@@ -59,6 +59,10 @@ namespace NuScien.Sample
         public Task<CollectionResult<GoodEntity>> SearchAsync(QueryArgs q, string siteId, CancellationToken cancellationToken)
         {
             // This is an additional method to extend search method.
+            // You can add the new method to get the list with further conditions
+            // by call SearchAsync(QueryData, CancellationToken)
+            // filling a key-value pair query data which will be translated to the expression
+            // in MapQuery(QueryPredication<TEntity>) member method.
 
             var query = q != null ? (QueryData)q : new QueryData();
             if (string.IsNullOrWhiteSpace(siteId)) query["site"] = siteId;
@@ -69,9 +73,12 @@ namespace NuScien.Sample
         public override async Task<ChangeMethodResult> SaveAsync(GoodEntity value, CancellationToken cancellationToken = default)
         {
             // This method is a demo about to override default entity save method.
-            // It requires a user logged in to save an entity.
+            // We may validate the permission of the current user to test if it can save the entity.
+            // And then call base.SaveAsync(TEntity, CancellationToken) member method if pass;
+            // otherwise, return the error result.
+            // For the example here, it requires a user logged in to save an entity.
 
-            if (!CoreResources.IsUserSignedIn) return new ChangeMethodResult(ChangeMethods.Invalid);
+            if (!CoreResources.IsUserSignedIn) return new ChangeMethodResult(ChangeErrorKinds.Unauthorized, "Requires authentication.");
             return await base.SaveAsync(value, cancellationToken);
         }
 
@@ -80,8 +87,10 @@ namespace NuScien.Sample
         {
             // This method is used to map the properties from query data to entity.
             // You can bind the query key and expression to filter the data source.
+            // The query key is from the query data
+            // and the expression is just to filter the source collection.
 
-            predication.AddForString("site", info => info.Source.Where(ele => ele.SiteId == info.Value));
+            predication.AddForString("site", info => info.Source.Where(ele => ele.OwnerSiteId == info.Value));
         }
     }
 
@@ -125,6 +134,9 @@ namespace NuScien.Sample
         /// <returns>A collection of entity.</returns>
         public Task<CollectionResult<GoodEntity>> SearchAsync(QueryArgs q, string siteId, CancellationToken cancellationToken)
         {
+            // Just map the parameters into a query arguments.
+            // And then call base.SearchAsync(QueryData, CancellationToken) to get response asynchronized.
+
             var query = q != null ? (QueryData)q : new QueryData();
             if (string.IsNullOrWhiteSpace(siteId)) query["site"] = siteId;
             return SearchAsync(query, cancellationToken);
