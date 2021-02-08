@@ -70,7 +70,7 @@ namespace NuScien.Sample
         }
 
         /// <inheritdoc />
-        public override async Task<ChangeMethodResult> SaveAsync(GoodEntity value, CancellationToken cancellationToken = default)
+        public override async Task<ChangingResultInfo> SaveAsync(GoodEntity value, CancellationToken cancellationToken = default)
         {
             // This method is a demo about to override default entity save method.
             // We may validate the permission of the current user to test if it can save the entity.
@@ -78,7 +78,7 @@ namespace NuScien.Sample
             // otherwise, return the error result.
             // For the example here, it requires a user logged in to save an entity.
 
-            if (!CoreResources.IsUserSignedIn) return new ChangeMethodResult(ChangeErrorKinds.Unauthorized, "Requires authentication.");
+            if (!CoreResources.IsUserSignedIn) return new ChangingResultInfo(ChangeErrorKinds.Unauthorized, "Requires authentication.");
             return await base.SaveAsync(value, cancellationToken);
         }
 
