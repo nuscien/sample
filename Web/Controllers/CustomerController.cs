@@ -18,7 +18,7 @@ namespace NuScien.Sample.Web.Controllers
     /// </summary>
     [ApiController]
     [Route("api/customers")]
-    public class CustomerController : BaseResourceEntityController<CustomerEntityProvider, CustomerEntity>
+    public class CustomerController : ResourceEntityControllerBase<CustomerEntityProvider, CustomerEntity>
     {
         /// <summary>
         /// Initializes a new instance of the CustomerController class.

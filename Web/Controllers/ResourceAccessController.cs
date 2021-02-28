@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using NuScien.Data;
 using NuScien.Security;
 using NuScien.Users;
+using NuScien.Web;
 using Trivial.Data;
 using Trivial.Net;
 using Trivial.Security;
@@ -24,7 +25,7 @@ namespace NuScien.Sample.Web.Controllers
     [ApiController]
     [Route("api")]
     [Route("nuscien5")]
-    public class ResourceAccessController : NuScien.Web.ResourceAccessController
+    public class ResourceAccessController : ResourceAccessControllerBase
     {
         /// <summary>
         /// Initializes a new instance of the ResourceAccessController class.
@@ -37,7 +38,7 @@ namespace NuScien.Sample.Web.Controllers
         /// Initializes a new instance of the ResourceAccessController class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public ResourceAccessController(ILogger<ResourceAccessController> logger) : base(logger)
+        public ResourceAccessController(ILogger<ResourceAccessControllerBase> logger) : base(logger)
         {
         }
     }

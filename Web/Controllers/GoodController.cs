@@ -18,7 +18,7 @@ namespace NuScien.Sample.Web.Controllers
     /// </summary>
     [ApiController]
     [Route("api/goods")]
-    public class GoodController : BaseResourceEntityController<GoodEntityProvider, GoodEntity>
+    public class GoodController : ResourceEntityControllerBase<GoodEntityProvider, GoodEntity>
     {
         /// <summary>
         /// Initializes a new instance of the GoodController class.

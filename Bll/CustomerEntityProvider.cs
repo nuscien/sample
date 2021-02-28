@@ -11,8 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore;
-using NuScien.Collection;
 using NuScien.Data;
+using Trivial.Collection;
 using NuScien.Security;
 using Trivial.Data;
 using Trivial.Reflection;
