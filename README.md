@@ -1,6 +1,6 @@
 # Sample of NuScien
 
-This is a sample for [NuScien 5](https://github.com/nuscien/nuscien) framework. It targets .NET 5.0 and licensed by MIT. Sample uses Microsoft SQL Server as its database, but the framework supports any based on Entity Framework Core 5.0.
+This is a sample for [NuScien 5](https://github.com/nuscien/nuscien) framework. It targets .NET 6.0 and licensed by MIT. Sample uses Microsoft SQL Server as its database, but the framework supports any based on Entity Framework Core 6.0.
 
 ## Prepare
 
@@ -32,7 +32,7 @@ Then inherit `OnPremisesResourceAccessContext` class to organize all the entity 
 
 ## Web API
 
-Targets ASP.NET Core 5.0.
+Targets ASP.NET Core 6.0.
 
 In Web API controllers, you need implement `ResourceAccessController` class with attribute `[ApiController]` and attribute `[Route]` with `api` and `nuscien5` input values. This is used for passport and settings.
 
