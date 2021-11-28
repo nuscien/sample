@@ -1,6 +1,6 @@
 # Sample of NuScien
 
-This is a sample for [NuScien 5](https://github.com/nuscien/nuscien) framework. It targets .NET 6.0 and licensed by MIT. Sample uses Microsoft SQL Server as its database, but the framework supports any based on Entity Framework Core 6.0.
+This is a sample for [NuScien 6](https://github.com/nuscien/nuscien) framework. It targets .NET 6.0 and licensed by MIT. Sample uses Microsoft SQL Server as its database, but the framework supports any based on Entity Framework Core 6.0.
 
 ## Prepare
 
